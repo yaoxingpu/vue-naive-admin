@@ -12,13 +12,10 @@ import { setupNaiveDiscreteApi } from './utils'
 
 async function setupApp() {
   const app = createApp(App)
-
   setupStore(app)
-  setupNaiveDiscreteApi()
-
   await setupRouter(app)
-
   app.mount('#app')
+  setupNaiveDiscreteApi()
 }
 
 setupApp()
