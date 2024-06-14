@@ -21,20 +21,22 @@
         </KeepAlive>
       </component>
 
-      <LayoutSetting class="fixed right-12 top-1/2 z-999" />
+      <LayoutSetting v-if="layoutSettingVisible" class="fixed right-12 top-1/2 z-999" />
     </router-view>
   </n-config-provider>
 </template>
 
 <script setup>
-import { zhCN, dateZhCN, darkTheme } from 'naive-ui'
+import { darkTheme, dateZhCN, zhCN } from 'naive-ui'
+import { layoutSettingVisible } from './settings'
 import { LayoutSetting } from '@/components'
 import { useAppStore, useTabStore } from '@/store'
 
 const layouts = new Map()
 function getLayout(name) {
   // 利用map将加载过的layout缓存起来，防止重新加载layout导致页面闪烁
-  if (layouts.get(name)) return layouts.get(name)
+  if (layouts.get(name))
+    return layouts.get(name)
   const layout = markRaw(defineAsyncComponent(() => import(`@/layouts/${name}/index.vue`)))
   layouts.set(name, layout)
   return layout
@@ -42,15 +44,17 @@ function getLayout(name) {
 
 const route = useRoute()
 const appStore = useAppStore()
-if (appStore.layout === 'default') appStore.setLayout('')
+if (appStore.layout === 'default')
+  appStore.setLayout('')
 const Layout = computed(() => {
-  if (!route.matched?.length) return null
+  if (!route.matched?.length)
+    return null
   return getLayout(route.meta?.layout || appStore.layout)
 })
 
 const tabStore = useTabStore()
 const keepAliveNames = computed(() => {
-  return tabStore.tabs.filter((item) => item.keepAlive).map((item) => item.name)
+  return tabStore.tabs.filter(item => item.keepAlive).map(item => item.name)
 })
 
 watchEffect(() => {
